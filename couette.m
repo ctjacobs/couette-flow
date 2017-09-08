@@ -32,21 +32,21 @@ function u = couette(Ly, Ny, T, dt, U)
     % Determine maximum error (in the Euclidean norm) of the numerical
     % solution.
     error = sum(abs(u-u_exact).^2)^0.5;
-    fprintf("The error in the Euclidean norm is %.5f\n", error);
+    fprintf('The error in the Euclidean norm is %.5f\n', error);
     
     % Plot the numerical and exact solutions.
     figure(1)
     plot(linspace(0, Ly, Ny), u)
-    legend("Numerical")
-    xlabel("y")
-    ylabel("u(y)")
+    legend('Numerical')
+    xlabel('y')
+    ylabel('u(y)')
     
     % Plot the error.
     figure(2)
     plot(linspace(0, Ly, Ny), abs(u-u_exact))
-    legend("Error")
-    xlabel("y")
-    ylabel("|u(y) - u_{exact}(y)|")    
+    legend('Error')
+    xlabel('y')
+    ylabel('|u(y) - u_{exact}(y)|')    
 end
 
 function u = solve(u_old, U, dy, dt)
