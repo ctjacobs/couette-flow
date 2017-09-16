@@ -3,9 +3,13 @@
 % plate stationary and the top and the top plate moving at a constant
 % speed U. A shear stress du/dy develops in the fluid as a result.
 %
+% Note that the time-dependent PDE du/dt = nu*(d2u/dy2) is actually solved
+% here, where nu is the kinematic viscosity of the fluid. It is the final
+% steady-state solution which satisfies d2u/dy2 = 0.
+%
 % Copyright (C) 2017 Christian Thomas Jacobs
 
-function u = couette(Ly, Ny, T, dt, U)
+function u = couette(Ly, Ny, T, dt, U, nu)
     % Grid spacing in the y direction.
     dy = Ly/(Ny-1);
 
@@ -20,7 +24,7 @@ function u = couette(Ly, Ny, T, dt, U)
     % This uses the Crank-Nicolson timestepping scheme.
     for n = 1:Nt
         % Compute solution at timestep n.
-        u = solve(u_old, U, dy, dt)
+        u = solve(u_old, U, dy, dt, nu)
         
         % Save the solution for use in the next timestep.
         u_old = u;
@@ -49,7 +53,7 @@ function u = couette(Ly, Ny, T, dt, U)
     ylabel('|u(y) - u_{exact}(y)|')    
 end
 
-function u = solve(u_old, U, dy, dt)
+function u = solve(u_old, U, dy, dt, nu)
     % Step forward one timestep by solving the discretised system of
     % equations.
     
@@ -58,8 +62,8 @@ function u = solve(u_old, U, dy, dt)
     u = zeros(Ny, 1);
 
     % Thomas algorithm for the solution of the tri-diagonal matrix system.
-    c1 = -dt/(2*dy^2);
-    c2 = 1 + dt/(dy^2);
+    c1 = -nu*dt/(2*dy^2);
+    c2 = 1 + nu*dt/(dy^2);
     a = zeros(Ny-1, 1);
     b = zeros(Ny, 1);
     r = zeros(Ny, 1);
